@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eclipse Client for Eaglercraft 1.19 – Download | by Hudson Williams and Rahil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Bricolage+Grotesque:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#0b1030; --deep:#141a4a; --ink:#eef0ff; --mute:#a9b0e0;
+  --corona:#ffb938; --ember:#ff6a3d; --grass:#5fd35f; --dirt:#8a5a34; --stone:#6c7393;
+  --panel:#1a2160; --line:#2d3790;
+  --field:#0b1030; --sky1:#070a22; --sky2:#141a4a; --sky3:#2a2468; --starop:1;
+  --navbg:rgba(11,16,48,.9); --notebg:#2a1630; --notetx:#ffd9cc; --okc:#5fd35f;
+  --btn:#ffb938; --btnsh:#b36d00;
+}
+[data-theme="light"]{
+  --night:#eaf3ff; --deep:#d8e8ff; --ink:#101840; --mute:#445087; --corona:#a85300; --ember:#c2410c;
+  --panel:#ffffff; --line:#98b0e6; --field:#f1f6ff; --sky1:#6fb6f5; --sky2:#b5ddfb; --sky3:#ffe3a8; --starop:0;
+  --navbg:rgba(234,243,255,.92); --notebg:#ffe9df; --notetx:#7a2a10; --okc:#17703a;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--night);color:var(--ink);font:17px/1.6 "Bricolage Grotesque",system-ui,sans-serif}
+h1,h2,h3,.px{font-family:"Pixelify Sans","Courier New",monospace;letter-spacing:.01em}
+a{color:var(--corona)}
+:focus-visible{outline:3px solid var(--corona);outline-offset:3px}
+.wrap{max-width:1000px;margin:0 auto;padding:0 22px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:5;background:var(--navbg);backdrop-filter:blur(8px);border-bottom:2px solid var(--line)}
+nav .wrap{display:flex;gap:22px;align-items:center;height:56px}
+nav b{font-family:"Pixelify Sans",monospace;font-size:20px;margin-right:auto;color:var(--corona)}
+nav a{color:var(--ink);text-decoration:none;font-size:15px}
+nav a:hover{color:var(--corona)}
+@media(max-width:620px){nav a.opt{display:none}}
+
+/* hero */
+.hero{position:relative;overflow:hidden;padding:64px 0 0;background:linear-gradient(var(--sky1),var(--sky2) 70%,var(--sky3))}
+.stars{position:absolute;inset:0;opacity:var(--starop);background-image:
+  radial-gradient(2px 2px at 12% 20%,#fff,transparent),radial-gradient(2px 2px at 30% 55%,#fff9,transparent),
+  radial-gradient(2px 2px at 48% 15%,#fff,transparent),radial-gradient(2px 2px at 70% 40%,#fff9,transparent),
+  radial-gradient(2px 2px at 88% 18%,#fff,transparent),radial-gradient(2px 2px at 8% 70%,#fff8,transparent),
+  radial-gradient(2px 2px at 93% 62%,#fff8,transparent),radial-gradient(2px 2px at 60% 8%,#fff,transparent)}
+.hero .wrap{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:center}
+.hero h1{font-size:clamp(40px,7vw,72px);line-height:1;margin:0 0 18px}
+.hero p{color:var(--mute);max-width:46ch;margin:0 0 26px}
+.btn{display:inline-block;font-family:"Pixelify Sans",monospace;font-size:22px;font-weight:700;color:#2a1600;text-decoration:none;
+  background:var(--btn);padding:14px 26px;border:0;box-shadow:0 6px 0 var(--btnsh),0 0 0 3px #2a1600 inset;cursor:pointer}
+.btn:hover{transform:translateY(2px);box-shadow:0 4px 0 var(--btnsh),0 0 0 3px #2a1600 inset}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:0 0 0 3px var(--line) inset;margin-left:10px;font-size:18px}
+.meta{margin-top:16px;font-size:14px;color:var(--mute)}
+.eclipse{position:relative;width:min(340px,80vw);aspect-ratio:1;margin:0 auto}
+.eclipse .sun,.eclipse .moon,.eclipse .flare{position:absolute;inset:14%;border-radius:50%}
+.eclipse .sun{background:radial-gradient(circle at 40% 38%,#fffbe0,#ffd36a 55%,#ff9d2e);box-shadow:0 0 50px 10px rgba(255,185,56,.55)}
+.eclipse .moon{background:#02030c;box-shadow:0 0 0 2px rgba(255,255,255,.07);transform:translateX(-135%);animation:slide 7s cubic-bezier(.45,.05,.3,1) .6s forwards}
+.eclipse .flare{opacity:0;box-shadow:0 0 0 5px #ffe9a8,0 0 40px 14px var(--btn),0 0 130px 46px rgba(255,106,61,.6);animation:flare 3.2s ease-out 6.9s forwards}
+@keyframes slide{to{transform:translateX(0)}}
+@keyframes flare{0%{opacity:0;transform:scale(1)}35%{opacity:1;transform:scale(1.14)}100%{opacity:.9;transform:scale(1)}}
+.eclipse .ring{position:absolute;inset:0;border-radius:50%;border:2px dashed rgba(255,185,56,.45);animation:spin 60s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.land{display:block;width:100%;height:auto;margin-top:34px;image-rendering:pixelated}
+@media(max-width:760px){.hero .wrap{grid-template-columns:1fr}.eclipse{order:-1;width:220px}}
+
+/* sections */
+section{padding:70px 0}
+section.alt{background:var(--deep);background:color-mix(in srgb,var(--deep) 60%,transparent);border-block:2px solid var(--line)}
+h2{font-size:clamp(30px,5vw,44px);margin:0 0 8px}
+.lead{color:var(--mute);margin:0 0 34px;max-width:60ch}
+
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:16px;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:56px 1fr;gap:18px;background:var(--panel);border:2px solid var(--line);padding:18px 20px}
+.steps li::before{content:counter(s);font-family:"Pixelify Sans",monospace;font-size:34px;font-weight:700;color:#2a1600;background:var(--grass);
+  width:48px;height:48px;display:grid;place-items:center;box-shadow:0 4px 0 #2d7a2d}
+.steps h3{margin:0 0 4px;font-size:22px}
+.steps p{margin:0;color:var(--mute)}
+kbd{font:600 14px "Bricolage Grotesque",sans-serif;background:var(--field);border:1px solid var(--line);border-bottom-width:3px;padding:1px 7px}
+
+.split{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:start}
+@media(max-width:760px){.split{grid-template-columns:1fr}}
+.card{background:var(--panel);border:2px solid var(--line);padding:22px}
+.card h3{margin:0 0 10px;font-size:22px}
+label{display:block;font-weight:600;margin-bottom:6px}
+input[type=text]{width:100%;font:600 20px "Pixelify Sans",monospace;color:var(--ink);background:var(--field);border:2px solid var(--line);padding:10px 12px}
+.verdict{margin:10px 0 0;min-height:1.6em;font-size:15px}
+.ok{color:var(--okc)} .bad{color:var(--ember)}
+.tips{margin:16px 0 0;padding-left:20px;color:var(--mute)}
+
+.addr{font-family:"Pixelify Sans",monospace;background:var(--field);border:2px solid var(--line);padding:12px 14px;margin:6px 0 14px;overflow-x:auto;white-space:nowrap}
+.addr s{text-decoration:none;color:var(--corona)}
+.note{border-left:5px solid var(--ember);background:var(--notebg);padding:14px 18px;margin-top:26px;color:var(--notetx)}
+.faq details{background:var(--panel);border:2px solid var(--line);padding:14px 18px;margin-bottom:10px}
+.faq summary{cursor:pointer;font-weight:600}
+.faq p{margin:10px 0 0;color:var(--mute)}
+footer{padding:36px 0;text-align:center;color:var(--mute);font-size:14px;border-top:2px solid var(--line)}
+
+.tg{font:600 14px "Bricolage Grotesque",sans-serif;color:var(--ink);background:transparent;border:2px solid var(--line);padding:5px 12px;cursor:pointer}
+.tg:hover{border-color:var(--corona)}
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%;background:#8b90b8;margin-right:8px;vertical-align:baseline}
+.dot.on{background:#3ddc6a;box-shadow:0 0 8px #3ddc6a}
+.dot.off{background:#ff5a4d}
+.dot.chk{background:var(--btn);animation:pulse 1s ease-in-out infinite alternate}
+@keyframes pulse{to{opacity:.35}}
+.mini{font:600 13px "Bricolage Grotesque",sans-serif;color:var(--ink);background:transparent;border:2px solid var(--line);padding:2px 10px;margin-left:8px;cursor:pointer}
+.mini:hover{border-color:var(--corona)}
+.info{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:22px 0 0}
+.info div{background:var(--panel);border:2px solid var(--line);padding:12px 16px}
+.info dt{font-size:14px;color:var(--mute)}
+.info dd{margin:2px 0 0;font:700 19px "Pixelify Sans",monospace}
+.log{margin:26px 0 0}
+.log h3{margin:0 0 8px;font-size:22px}
+.log ul{margin:0;padding-left:20px;color:var(--mute)}
+.log li{margin-bottom:4px}
+.status{margin:0 0 14px;font-weight:600}
+.sky{position:fixed;inset:0;z-index:-1;background:var(--night)}
+.sky::before{content:"";position:absolute;inset:0;opacity:calc(var(--starop)*var(--so,1));background-size:240px 240px;
+  background-image:radial-gradient(1.5px 1.5px at 20px 30px,#fff,transparent),radial-gradient(1.5px 1.5px at 130px 90px,#fffa,transparent),radial-gradient(1.5px 1.5px at 200px 170px,#fff,transparent),radial-gradient(1.5px 1.5px at 70px 200px,#fff8,transparent)}
+.sky::after{content:"";position:absolute;inset:0;opacity:var(--glow,0);background:radial-gradient(120% 60% at 50% 110%,rgba(255,150,70,.9),transparent 70%)}
+.plx{will-change:transform}
+@media(prefers-reduced-motion:reduce){.eclipse .ring{animation:none}.eclipse .moon{animation:none;transform:none}.eclipse .flare{animation:none;opacity:.9}.dot.chk{animation:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="sky" id="sky" aria-hidden="true"></div>
+
+<nav>
+  <div class="wrap">
+    <b>ECLIPSE</b>
+    <a href="#download">Download</a>
+    <a class="opt" href="#install">How to install</a>
+    <a class="opt" href="#username">Username</a>
+    <a href="#servers">Servers</a>
+    <button class="tg" id="tg" type="button" aria-label="Switch between night and day theme">Day mode</button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="stars" aria-hidden="true"></div>
+  <div class="wrap">
+    <div>
+      <h1>Eclipse Client<br>for Eaglercraft 1.19</h1>
+      <p class="px" style="font-size:22px;color:var(--corona);margin:-4px 0 14px">by Hudson Williams and Rahil</p>
+      <p>Play Minecraft in your browser. Download the client file, open it, pick a username and join a server. No installer needed.</p>
+      <a class="btn dlink" href="EclipseClient_1_19_JS.html" download="EclipseClient_1_19_JS.html" id="dl">Download client</a>
+      <a class="btn ghost" href="#install">How it works</a>
+      <div class="meta">File: EclipseClient_1_19_JS.html &nbsp;|&nbsp; Works in Chrome, Edge, Firefox</div>
+      <div class="meta"><span class="dot chk"></span><span class="stx">Checking server...</span><button class="mini cpy" type="button" data-copy="wss://play.shadownetwork.shop" data-label="Copy server">Copy server</button></div>
+    </div>
+    <div class="eclipse" id="ecl" aria-hidden="true"><div class="ring"></div><div class="sun"></div><div class="moon"></div><div class="flare"></div></div>
+  </div>
+
+  <!-- pixel landscape -->
+  <svg class="land" id="land" viewBox="0 0 96 22" preserveAspectRatio="none" aria-hidden="true" shape-rendering="crispEdges">
+    <g class="plx" data-k=".12" fill="#1d2468">
+      <path d="M0 14h6v-3h6v-4h8v3h6v-5h8v4h6v-3h8v5h8v-4h10v4h8v-3h8v6h4v8H0z"/>
+    </g>
+    <g class="plx" data-k=".05" fill="#5fd35f">
+      <path d="M0 16h10v-2h8v-2h10v2h12v-3h10v3h10v-2h10v2h12v2H0z"/>
+    </g>
+    <path fill="#8a5a34" d="M0 18h96v4H0z"/>
+    <g fill="#6c7393"><rect x="14" y="19" width="2" height="2"/><rect x="40" y="20" width="3" height="2"/><rect x="71" y="19" width="2" height="2"/></g>
+    <g class="plx" data-k=".05" fill="#3f8f3f"><rect x="20" y="9" width="2" height="5"/><rect x="18" y="6" width="6" height="4"/><rect x="70" y="10" width="2" height="4"/><rect x="68" y="7" width="6" height="4"/></g>
+  </svg>
+</header>
+
+<section id="download">
+  <div class="wrap">
+    <h2>Get the file</h2>
+    <p class="lead">One HTML file is the whole game. Save it anywhere you can find it again, like your Desktop or Downloads folder.</p>
+    <div class="card" style="display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between">
+      <div>
+        <h3 style="margin:0">EclipseClient_1_19_JS.html</h3>
+        <div class="meta" style="margin:4px 0 0">Eaglercraft 1.19 client, runs offline once saved</div>
+      </div>
+      <a class="btn dlink" href="EclipseClient_1_19_JS.html" download="EclipseClient_1_19_JS.html">Download now</a>
+    </div>
+    <details class="card" style="margin-top:18px">
+      <summary style="cursor:pointer;font-weight:600">Download not starting?</summary>
+      <ul class="tips">
+        <li>Right-click the button and choose <b>Save link as</b>.</li>
+        <li>Allow downloads for this site if your browser asks. Chrome may warn about a large file; choose <b>Keep</b>.</li>
+        <li>The file is about 90 MB, so a slow connection can take a minute before the save box appears.</li>
+        <li>Still nothing? Message the site owner.</li>
+      </ul>
+    </details>
+    <dl class="info">
+      <div><dt>Version</dt><dd>Eclipse Client 1.19 (JS)</dd></div>
+      <div><dt>File size</dt><dd>90 MB</dd></div>
+      <div><dt>Last updated</dt><dd>October 6, 2026</dd></div>
+      <div><dt>File type</dt><dd>Single HTML file</dd></div>
+    </dl>
+    <div class="log">
+      <h3>What's new</h3>
+      <ul>
+        <li>October 6, 2026: download page launched with the Eclipse Client 1.19 file.</li>
+        <li>Shadow Network added as the main server, with a live status check.</li>
+        <li>Day and night themes, and copy buttons for server addresses.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="install" class="alt">
+  <div class="wrap">
+    <h2>How to download and open it</h2>
+    <p class="lead">It takes about a minute.</p>
+    <ol class="steps">
+      <li><div><h3>Click Download client</h3><p>Your browser saves <b>EclipseClient_1_19_JS.html</b>. If nothing happens, right-click the button and choose <i>Save link as</i>.</p></div></li>
+      <li><div><h3>Find the file</h3><p>Open your Downloads folder. Keep the file in a place you will remember. Moving it later will not break it.</p></div></li>
+      <li><div><h3>Open it in your browser</h3><p>Double-click the file. If it opens in the wrong app, right-click, choose <i>Open with</i>, then Chrome, Edge or Firefox.</p></div></li>
+      <li><div><h3>Wait for it to load</h3><p>The first start can take a few seconds. If the screen stays black, press <kbd>F5</kbd> to reload and make sure hardware acceleration is on in your browser settings.</p></div></li>
+    </ol>
+  </div>
+</section>
+
+<section id="username">
+  <div class="wrap">
+    <h2>Set up your username</h2>
+    <p class="lead">Eaglercraft has no account login. Your username is just a name you choose, and you can change it any time.</p>
+    <div class="split">
+      <ol class="steps">
+        <li><div><h3>Open the profile screen</h3><p>On the main menu, open <b>Multiplayer</b> or <b>Options</b> and choose <b>Edit Profile</b>.</p></div></li>
+        <li><div><h3>Type your name</h3><p>Use 3 to 16 characters: letters, numbers and underscores only.</p></div></li>
+        <li><div><h3>Pick a skin</h3><p>Choose a default skin or upload a 64x64 PNG skin file, then press <b>Done</b>.</p></div></li>
+      </ol>
+      <div class="card">
+        <h3>Check a name before you use it</h3>
+        <label for="nm">Try a username</label>
+        <input id="nm" type="text" value="" placeholder="Steve_2026" maxlength="24" autocomplete="off">
+        <p class="verdict" id="vd" aria-live="polite">Type a name to check it.</p>
+        <ul class="tips">
+          <li>Skip spaces and symbols; many servers reject them.</li>
+          <li>Avoid copying staff or famous player names.</li>
+          <li>Pick one name and stick to it so friends can find you.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="servers" class="alt">
+  <div class="wrap">
+    <h2>Play on servers</h2>
+    <p class="lead">Eaglercraft connects through WebSocket addresses, not normal Minecraft IPs. A server must say it supports Eaglercraft 1.19 or Eaglercraft, or it will not let you in.</p>
+    <ol class="steps">
+      <li><div><h3>Open Multiplayer</h3><p>From the main menu, choose <b>Multiplayer</b>.</p></div></li>
+      <li><div><h3>Add the server</h3><p>Press <b>Add Server</b>, type any name you like, and paste the server address.</p></div></li>
+      <li><div><h3>Use the right address format</h3><p>Addresses start with <b>wss://</b> (secure) or <b>ws://</b>. If you opened the client from a website (https), use <b>wss://</b>.</p></div></li>
+      <li><div><h3>Join</h3><p>Select the server and press <b>Join Server</b>. You can also use <b>Direct Connect</b> for a one-off address.</p></div></li>
+    </ol>
+    <div class="card" style="margin-top:26px;border-color:var(--corona)">
+      <h3>Main server: Shadow Network</h3>
+      <p class="status" aria-live="polite"><span class="dot chk"></span><span class="stx">Checking server...</span></p>
+      <label>Server address</label>
+      <div class="addr" id="srv"><s>wss://</s>play.shadownetwork.shop</div>
+      <button class="btn cpy" type="button" data-copy="wss://play.shadownetwork.shop" data-label="Copy address" style="font-size:18px;padding:10px 20px">Copy address</button>
+      <p class="meta">In Multiplayer, press Add Server, paste this address, then Join Server.</p>
+    </div>
+    <div class="note"><b>Stay safe online.</b> Never share passwords or personal info in server chat, and only download client files from sources you trust.</div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap faq">
+    <h2>Quick answers</h2>
+    <p class="lead">&nbsp;</p>
+    <details><summary>Can't connect to a server?</summary><p>Check that the address starts with wss:// or ws://, that the server supports Eaglercraft 1.19, and that it is online. Some servers only accept a certain client version.</p></details>
+    <details><summary>Does it work on a phone or Chromebook?</summary><p>It runs on Chromebooks and desktop browsers. Phones can open it, but touch controls are limited.</p></details>
+    <details><summary>Is the game laggy?</summary><p>Lower render distance in Options &gt; Video Settings and close other tabs. Use a recent version of Chrome or Edge.</p></details>
+    <details><summary>Is it the official Minecraft?</summary><p>No. Eaglercraft is a community project that runs in the browser and is not made by or connected to Mojang or Microsoft.</p></details>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">Eclipse Client download page by Hudson Williams and Rahil. Unofficial fan project, not affiliated with Mojang or Microsoft.</div>
+</footer>
+
+<script>
+// Download link. On GitHub Pages this finds your release file automatically:
+//   https://github.com/YOUR-USER/YOUR-REPO/releases/latest/download/EclipseClient_1_19_JS.html
+// To use another host instead, paste a direct link between the quotes below.
+var CLIENT_URL='';
+var FILE_NAME='EclipseClient_1_19_JS.html';
+function autoGithubUrl(){
+  var m=location.hostname.match(/^([^.]+)\.github\.io$/i);
+  if(!m)return null;
+  var seg=location.pathname.split('/')[1]||'';
+  var repo=(seg&&!/\.html?$/i.test(seg))?seg:location.hostname;
+  return 'https://github.com/'+m[1]+'/'+repo+'/releases/latest/download/'+FILE_NAME;
+}
+var CLIENT_LINK=CLIENT_URL||autoGithubUrl()||FILE_NAME;
+Array.prototype.forEach.call(document.querySelectorAll('a.dlink'),function(a){
+  a.href=CLIENT_LINK;
+  if(/^https?:\/\//i.test(CLIENT_LINK)&&CLIENT_LINK.indexOf(location.origin)!==0)a.removeAttribute('download');
+});
+(function(){
+  var ADDR='wss://play.shadownetwork.shop';
+  // theme
+  var root=document.documentElement, tg=document.getElementById('tg');
+  function setTheme(t){
+    if(t==='light'){root.setAttribute('data-theme','light');tg.textContent='Night mode'}
+    else{root.removeAttribute('data-theme');tg.textContent='Day mode'}
+    try{localStorage.setItem('theme',t)}catch(e){}
+  }
+  var saved=null;try{saved=localStorage.getItem('theme')}catch(e){}
+  if(saved==='light')setTheme('light');
+  tg.addEventListener('click',function(){setTheme(root.getAttribute('data-theme')==='light'?'dark':'light')});
+
+  // copy buttons
+  function copyText(t,cb){
+    function fallback(){
+      var a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';
+      document.body.appendChild(a);a.select();var ok=false;try{ok=document.execCommand('copy')}catch(e){}
+      document.body.removeChild(a);cb(ok);
+    }
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){cb(true)},fallback)}
+    else fallback();
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.cpy'),function(b){
+    b.addEventListener('click',function(){
+      copyText(b.getAttribute('data-copy'),function(ok){
+        b.textContent=ok?'Copied':'Press Ctrl+C';
+        setTimeout(function(){b.textContent=b.getAttribute('data-label')},1800);
+      });
+    });
+  });
+
+  // server status (Eaglercraft servers answer a MOTD query over WebSocket)
+  var dots=document.querySelectorAll('.dot'), txts=document.querySelectorAll('.stx');
+  function setState(cls,text){
+    Array.prototype.forEach.call(dots,function(d){d.className='dot '+cls});
+    Array.prototype.forEach.call(txts,function(x){x.textContent=text});
+  }
+  function check(){
+    setState('chk','Checking server...');
+    var done=false,ws,t;
+    function fin(cls,text){if(done)return;done=true;clearTimeout(t);try{ws.close()}catch(e){}setState(cls,text)}
+    try{ws=new WebSocket(ADDR)}catch(e){setState('off','Server offline or unreachable');return}
+    t=setTimeout(function(){fin('off','Server offline or unreachable')},8000);
+    ws.onopen=function(){
+      try{ws.send('Accept: MOTD')}catch(e){}
+      setTimeout(function(){fin('on','Server online')},3000);
+    };
+    ws.onmessage=function(ev){
+      try{
+        var j=JSON.parse(ev.data);
+        if(j&&j.data&&typeof j.data.online==='number'){
+          var m=typeof j.data.max==='number'&&j.data.max>0?' of '+j.data.max:'';
+          fin('on','Server online: '+j.data.online+m+' players');
+        }
+      }catch(e){}
+    };
+    ws.onerror=function(){fin('off','Server offline or unreachable')};
+  }
+  check();setInterval(check,60000);
+})();
+(function(){
+  var i=document.getElementById('nm'), v=document.getElementById('vd');
+  i.addEventListener('input',function(){
+    var n=i.value;
+    if(!n){v.className='verdict';v.textContent='Type a name to check it.';return}
+    if(n.length<3){v.className='verdict bad';v.textContent='Too short. Use at least 3 characters.';return}
+    if(n.length>16){v.className='verdict bad';v.textContent='Too long. Use 16 characters or fewer.';return}
+    if(!/^[A-Za-z0-9_]+$/.test(n)){v.className='verdict bad';v.textContent='Use only letters, numbers and underscores.';return}
+    v.className='verdict ok';v.textContent=n+' looks good.';
+  });
+})();
+
+(function(){
+  var root=document.documentElement, sky=document.getElementById('sky'),
+      land=document.getElementById('land'), ecl=document.getElementById('ecl'),
+      plx=document.querySelectorAll('.plx'),
+      still=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var DARK=[[0,'#0b1030'],[.4,'#141a4a'],[.75,'#2f2570'],[1,'#4a2f78']],
+      LIGHT=[[0,'#eaf3ff'],[.45,'#dcebff'],[.75,'#efe6ff'],[1,'#ffdfb8']];
+  function hex(h){return [1,3,5].map(function(i){return parseInt(h.substr(i,2),16)})}
+  function mix(stops,p){
+    for(var i=1;i<stops.length;i++){
+      if(p<=stops[i][0]){
+        var a=stops[i-1],b=stops[i],t=(p-a[0])/(b[0]-a[0]),x=hex(a[1]),y=hex(b[1]);
+        return 'rgb('+x.map(function(v,k){return Math.round(v+(y[k]-v)*t)}).join(',')+')';
+      }
+    }
+    return stops[stops.length-1][1];
+  }
+  var queued=false;
+  function update(){
+    queued=false;
+    var y=window.pageYOffset||0, max=Math.max(1,document.documentElement.scrollHeight-window.innerHeight),
+        p=Math.min(1,Math.max(0,y/max)), light=root.getAttribute('data-theme')==='light';
+    sky.style.backgroundColor=mix(light?LIGHT:DARK,p);
+    sky.style.setProperty('--so',Math.max(0,1-p*1.4).toFixed(3));
+    sky.style.setProperty('--glow',(Math.pow(p,2)*(light?.18:.22)).toFixed(3));
+    if(still||!land)return;
+    var c=Math.min(y,450), unit=(land.clientWidth||960)/96;
+    Array.prototype.forEach.call(plx,function(g){
+      g.style.transform='translateY('+(c*parseFloat(g.getAttribute('data-k'))/unit).toFixed(3)+'px)';
+    });
+    if(ecl)ecl.style.transform='translateY('+(c*.18).toFixed(1)+'px)';
+  }
+  function queue(){if(!queued){queued=true;requestAnimationFrame(update)}}
+  window.addEventListener('scroll',queue,{passive:true});
+  window.addEventListener('resize',queue);
+  var tgb=document.getElementById('tg');
+  if(tgb)tgb.addEventListener('click',queue);
+  update();
+})();
+</script>
+</body>
+</html>
